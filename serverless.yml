@@ -27,6 +27,11 @@ provider:
   environment:
     tableName: ${self:custom.tableName}
     stripeSecretKey: ${env:STRIPE_SECRET_KEY}
+    email: ${env:SMTP_EMAIL}
+    oauth2ClientId: ${env:OAUTH2_CLIENT_ID}
+    oauth2ClientSecret: ${env:OAUTH2_CLIENT_SECRET}
+    oauth2RefreshToken: ${env:OAUTH2_REFRESH_TOKEN}
+    oauth2RedirectURL: ${env:OAUTH2_REDIRECT_URL}
 
   # 'iamRoleStatements' defines the permission policy for the Lambda function.
   # In this case Lambda functions are granted with permissions to access DynamoDB.
@@ -112,6 +117,17 @@ functions:
     events:
       - http:
           path: billing
+          method: post
+          cors: true
+          authorizer: aws_iam
+  send:
+    # Defines an HTTP API endpoint that calls the main function in send.js
+    # - path: url path is /send
+    # - method: POST request
+    handler: send.main
+    events:
+      - http:
+          path: send
           method: post
           cors: true
           authorizer: aws_iam
