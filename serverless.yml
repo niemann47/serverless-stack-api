@@ -127,7 +127,7 @@ functions:
     handler: send.main
     events:
       - http:
-          path: send
+          path: notes/{id}
           method: post
           cors: true
           authorizer: aws_iam
