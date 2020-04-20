@@ -2,20 +2,10 @@ const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
 
-export async function email(item) {
-    const { content, attachment, service, username, clientId, clientSecret, refreshToken, redirectURL } = item;
-    const oauth2Client = new OAuth2(
-        clientId, // ClientID
-        clientSecret, // Client Secret
-        redirectURL // Redirect URL
-    );
-
-    oauth2Client.setCredentials({
-        refresh_token: refreshToken
-    });
-
+export async function email(smtp, note) {
+    const { content, attachment} = note;
     // Build the SMTP server
-    let transporter = getTransporter(oauth2Client, service, username);
+    let transporter = getTransporter(smtp);
 
     // send mail with defined transport object
     let info = await transporter.sendMail({
@@ -30,20 +20,27 @@ export async function email(item) {
     return messageURL;
 }
 
-function getTransporter(oauth2Client, service, username) {
+function getTransporter(smtp) {
+    const oauth2Client = new OAuth2(
+        smtp.clientId, // ClientID
+        smtp.clientSecret, // Client Secret
+        smtp.redirectURL // Redirect URL
+    );
+
     oauth2Client.setCredentials({
-        refresh_token: process.env.oauth2RefreshToken
+        refresh_token: smtp.refreshToken
     });
+
     const accessToken = oauth2Client.getAccessToken();
     // create reusable transporter object using the default SMTP transport
     return nodemailer.createTransport({
-        service: "gmail",
+        service: smtp.service,
         auth: {
           type: "OAuth2",
-          user: process.env.email,
-          clientId: oauth2Client.clientId,
-          clientSecret: oauth2Client.clientSecret,
-          refreshToken: oauth2Client.refresh_token,
+          user: smtp.username,
+          clientId: smtp.clientId,
+          clientSecret: smtp.clientSecret,
+          refreshToken: smtp.refreshToken,
           accessToken: accessToken
         }
     });
