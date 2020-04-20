@@ -126,18 +126,18 @@ functions:
           authorizer: aws_iam
   send:
     # Defines an HTTP API endpoint that calls the main function in send.js
-    # - path: url path is /send
+    # - path: url path is /send/{id}
     # - method: POST request
     handler: send.main
     events:
       - http:
-          path: notes/{id}
+          path: send/{id}
           method: post
           cors: true
           authorizer: aws_iam
   smtp:
     # Defines an HTTP API endpoint that calls the main function in smpt.js
-    # - path: url path is /send
+    # - path: url path is /smtp
     # - method: PUT request
     handler: smtp.main
     events:

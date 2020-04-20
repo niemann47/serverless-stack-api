@@ -1,4 +1,5 @@
 {
+  "body": "{\"recipient\":\"email@example.com\",\"subject\":\"My Note\"}",
   "pathParameters": {
     "id": "a9c17c00-8330-11ea-bee8-3592016c1280"
   },

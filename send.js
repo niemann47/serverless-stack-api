@@ -3,6 +3,7 @@ import { success, failure } from "./libs/response-lib";
 import { email } from "./libs/nodemailer-lib";
 
 export async function main(event, context) {
+  const { recipient, subject } = JSON.parse(event.body);
   const smtpParams = {
     TableName: process.env.smtpTableName,
     // 'Key' defines the partition key and sort key of the item to be retrieved
@@ -28,11 +29,11 @@ export async function main(event, context) {
     const noteResult = await dynamoDbLib.call("get", notesParams);
 
     if (smtpResult.Item && noteResult.Item) {
-      let messageURL = await email(smtpResult.Item, noteResult.Item);
+      let messageURL = await email(recipient, subject, smtpResult.Item, noteResult.Item);
 
       return success(messageURL);
     } else {
-      return failure({ status: false, error: "Item not found." });
+      return failure({ status: false, error: "Note or SMTP not found." });
     }
   } catch (e) {
     console.log(e.message);

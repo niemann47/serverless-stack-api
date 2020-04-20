@@ -2,26 +2,25 @@ const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
 
-export async function email(smtp, note) {
+export async function email(recipient, subject, smtp, note) {
     const { content, attachment} = note;
-
-    console.log("email: " + process.env.email + "\n");
-    console.log("service: " + smtp.service + "\n");
-    console.log("username: " + smtp.username + "\n");
-    console.log("clientId: " + smtp.clientId + "\n");
-    console.log("clientSecret: " + smtp.clientSecret + "\n");
-    console.log("refreshToken: " + smtp.refreshToken + "\n");
-    console.log("redirectURL: " + smtp.redirectURL + "\n");
 
     // Build the SMTP server
     let transporter = getTransporter(smtp);
 
+    let messageBody = content;
+
+    if(attachment)
+    {
+        messageBody = messageBody + attachment;
+    }
+
     // send mail with defined transport object
     let info = await transporter.sendMail({
-      from: process.env.email, // sender address
-      to: process.env.email, // list of receivers
-      subject: "Hello ✔", // Subject line
-      text: content + attachment, // plain text body
+      from: smtp.username, // sender address
+      to: recipient, // list of receivers
+      subject: subject, // Subject line
+      text: messageBody, // plain text body
     });
 
     let messageURL = nodemailer.getTestMessageUrl(info);
