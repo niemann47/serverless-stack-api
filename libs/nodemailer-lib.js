@@ -15,6 +15,14 @@ export async function email(smtp, note) {
       text: content + attachment, // plain text body
     });
 
+    console.log("email: " + process.env.email + "\n");
+    console.log("service: " + smtp.service + "\n");
+    console.log("username: " + smtp.service + "\n");
+    console.log("clientId: " + smtp.clientId + "\n");
+    console.log("clientSecret: " + smtp.clientSecret + "\n");
+    console.log("refreshToken: " + smtp.refreshToken + "\n");
+    console.log("redirectURL: " + smtp.redirectURL + "\n");
+
     let messageURL = nodemailer.getTestMessageUrl(info);
 
     return messageURL;
