@@ -4,13 +4,11 @@ import { email } from "./libs/nodemailer-lib";
 
 export async function main(event, context) {
   const params = {
-    TableName: process.env.tableName,
+    TableName: process.env.smtpTableName,
     // 'Key' defines the partition key and sort key of the item to be retrieved
     // - 'userId': Identity Pool identity id of the authenticated user
-    // - 'noteId': path parameter
     Key: {
       userId: event.requestContext.identity.cognitoIdentityId,
-      noteId: event.pathParameters.id
     }
   };
 

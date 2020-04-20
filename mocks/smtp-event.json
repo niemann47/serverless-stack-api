@@ -1,0 +1,8 @@
+{
+    "body": "{\"service\":\"gmail\",\"username\":\"admin@gmail.com\",\"clientId\":\"32s3\",\"clientSecret\":\"mySecret\",\"refreshToken\":\"refreshstuff\",\"redirectURL\":\"http:nope\"}",
+    "requestContext": {
+      "identity": {
+        "cognitoIdentityId": "USER-SUB-4321"
+      }
+    }
+  }

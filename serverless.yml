@@ -15,6 +15,8 @@ custom:
   stage: ${opt:stage, self:provider.stage}
   # Set the table name here so we can use it while testing locally
   tableName: ${self:custom.stage}-notes
+  # Set the smtp table name here so we can use it while testing locally
+  smtpTableName: ${self:custom.stage}-SMTP
 
 provider:
   name: aws
@@ -26,6 +28,7 @@ provider:
   # under process.env.
   environment:
     tableName: ${self:custom.tableName}
+    smtpTableName: ${self:custom.smtpTableName}
     stripeSecretKey: ${env:STRIPE_SECRET_KEY}
     email: ${env:SMTP_EMAIL}
     oauth2ClientId: ${env:OAUTH2_CLIENT_ID}
@@ -129,6 +132,17 @@ functions:
       - http:
           path: notes/{id}
           method: post
+          cors: true
+          authorizer: aws_iam
+  smtp:
+    # Defines an HTTP API endpoint that calls the main function in smpt.js
+    # - path: url path is /send
+    # - method: PUT request
+    handler: smtp.main
+    events:
+      - http:
+          path: smtp
+          method: put
           cors: true
           authorizer: aws_iam
 

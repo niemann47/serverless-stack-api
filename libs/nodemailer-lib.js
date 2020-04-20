@@ -2,16 +2,20 @@ const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
 
-const oauth2Client = new OAuth2(
-    process.env.oauth2ClientId, // ClientID
-    process.env.oauth2ClientSecret, // Client Secret
-    process.env.oauth2RedirectURL // Redirect URL
-);
-
 export async function email(item) {
-    const { content, attachment } = item;
+    const { content, attachment, service, username, clientId, clientSecret, refreshToken, redirectURL } = item;
+    const oauth2Client = new OAuth2(
+        clientId, // ClientID
+        clientSecret, // Client Secret
+        redirectURL // Redirect URL
+    );
+
+    oauth2Client.setCredentials({
+        refresh_token: refreshToken
+    });
+
     // Build the SMTP server
-    let transporter = getTransporter();
+    let transporter = getTransporter(oauth2Client, service, username);
 
     // send mail with defined transport object
     let info = await transporter.sendMail({
@@ -26,7 +30,7 @@ export async function email(item) {
     return messageURL;
 }
 
-function getTransporter() {
+function getTransporter(oauth2Client, service, username) {
     oauth2Client.setCredentials({
         refresh_token: process.env.oauth2RefreshToken
     });
@@ -37,9 +41,9 @@ function getTransporter() {
         auth: {
           type: "OAuth2",
           user: process.env.email,
-          clientId: process.env.oauth2ClientId,
-          clientSecret: process.env.oauth2ClientSecret,
-          refreshToken: process.env.oauth2RefreshToken,
+          clientId: oauth2Client.clientId,
+          clientSecret: oauth2Client.clientSecret,
+          refreshToken: oauth2Client.refresh_token,
           accessToken: accessToken
         }
     });
