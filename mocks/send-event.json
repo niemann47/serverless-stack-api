@@ -1,7 +1,7 @@
 {
-  "body": "{\"recipient\":\"email@example.com\",\"subject\":\"My Note\"}",
+  "body": "{\"recipient\":\"Niemann47@gmail.com\",\"subject\":\"My Note\",\"attachmentURL\":\"https://notes-app-2-api-dev-attachmentsbucket-rrorqiu5n7fs.s3.us-east-2.amazonaws.com/private/us-east-2%3Ab70f69d2-b0df-4589-873e-335b44db6ae8/1587181532762-pic.jpg\"}",
   "pathParameters": {
-    "id": "a9c17c00-8330-11ea-bee8-3592016c1280"
+    "id": "10e963e0-8127-11ea-8379-4f7ce1ee2a0a"
   },
   "requestContext": {
     "identity": {

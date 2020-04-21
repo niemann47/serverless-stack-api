@@ -1,8 +1,9 @@
+//import { Amplify, Storage } from "aws-amplify";
 const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
 
-export async function email(recipient, subject, smtp, note) {
+export async function email(recipient, subject, attachmentURL, smtp, note) {
     const { content, attachment} = note;
 
     // Build the SMTP server
@@ -10,17 +11,17 @@ export async function email(recipient, subject, smtp, note) {
 
     let messageBody = content;
 
-    if(attachment)
-    {
-        messageBody = messageBody + attachment;
-    }
-
     // send mail with defined transport object
     let info = await transporter.sendMail({
       from: smtp.username, // sender address
       to: recipient, // list of receivers
       subject: subject, // Subject line
-      text: messageBody, // plain text body
+      html: messageBody + '<img src="cid:attachment"/>', // html body
+      attachments: [{
+        filename: attachment,
+        path: attachmentURL,
+        cid: 'attachment' //same cid value as in the html img src
+      }]
     });
 
     let messageURL = nodemailer.getTestMessageUrl(info);
