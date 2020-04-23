@@ -15,7 +15,7 @@ export async function email(recipient, subject, attachmentURL, smtp, note) {
       from: smtp.username, // sender address
       to: recipient, // list of receivers
       subject: subject, // Subject line
-      html: messageBody + '<img src="cid:attachment"/>', // html body
+      html: messageBody + '<br/><img src="cid:attachment"/>', // html body
       attachments: [{
         filename: attachment,
         path: attachmentURL,
